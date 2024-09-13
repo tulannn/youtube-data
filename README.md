@@ -27,6 +27,6 @@ NOTE
 
 I developed this project entirely using ChatGPT's *4o model. Without any coding knowledge,
 i simply communicated my requests to the 4o model and shared any errors i encountered via copy-paste.
-If you have any questions, i might not be able to solve them myself, but I'm almost certain that GPT can help me.
+If you have any questions, i might not be able to solve them myself, but i almost certain that GPT can help me.
 
   *ChatGPT 4o – July 2024
