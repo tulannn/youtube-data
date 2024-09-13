@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube Data Processor</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Data Processor</h1>
+        <form id="linkForm" method="post" action="{% url 'process_link' %}" onsubmit="submitForm(); return false;">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="youtube_link">YouTube Link:</label>
+                <input type="text" id="youtube_link" name="youtube_link" required>
+            </div>
+            <button type="submit" class="submit-btn">İşle</button>
+        </form>
+        <a href="{% url 'settings' %}" class="settings-btn">Ayarlar</a>
+    </div>
+
+    <div id="datePopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closeDatePopup()">&times;</span>
+            <h2>Tarih Seçimi</h2>
+            <label for="date_option">Tarih Seçimi:</label>
+            <select id="date_option" name="date_option" onchange="toggleDateInput()">
+                <option value="tüm">Tüm</option>
+                <option value="varsayılan">Varsayılan (6 ay)</option>
+                <option value="seç">Tarih Seç</option>
+            </select>
+            <input type="date" id="date_input" name="date_input" style="display: none;">
+            <button onclick="submitDateSelection()">Tamam</button>
+        </div>
+    </div>
+
+    <div id="processPopup" class="popup">
+        <div class="popup-content">
+            <h2>İşlem Devam Ediyor</h2>
+            <p id="processStatus">Başlangıç...</p>
+            <button id="completeButton" onclick="closeProcessPopup()" style="display: none;">Tamam</button>
+        </div>
+    </div>
+
+    <script>
+        function showProcessPopup() {
+            document.getElementById('processPopup').style.display = 'block';
+        }
+    
+        function closeProcessPopup() {
+            document.getElementById('processPopup').style.display = 'none';
+        }
+    
+        function updateProcessStatus(message) {
+            document.getElementById('processStatus').innerText = message;
+        }
+    
+        function showCompleteButton() {
+            document.getElementById('completeButton').style.display = 'block';
+        }
+    
+        function submitForm() {
+            const link = document.getElementById('youtube_link').value;
+            if (link.includes('channel') || link.includes('user') || link.includes('c/') || link.includes('@')) {
+                showDatePopup();
+            } else {
+                document.getElementById('processPopup').style.display = 'block';
+                const formData = new FormData(document.getElementById('linkForm'));
+                fetch("{% url 'process_link' %}", {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.text())
+                .then(data => {
+                    updateProcessStatus("İşlem tamamlandı.");
+                    showCompleteButton();
+                })
+                .catch(error => {
+                    updateProcessStatus("Bir hata oluştu: " + error);
+                    showCompleteButton();
+                });
+            }
+        }
+    
+        function showDatePopup() {
+            document.getElementById('datePopup').style.display = 'block';
+        }
+    
+        function closeDatePopup() {
+            document.getElementById('datePopup').style.display = 'none';
+        }
+    
+        function toggleDateInput() {
+            const dateOption = document.getElementById('date_option').value;
+            if (dateOption === 'seç') {
+                document.getElementById('date_input').style.display = 'block';
+            } else {
+                document.getElementById('date_input').style.display = 'none';
+            }
+        }
+    
+        function submitDateSelection() {
+            closeDatePopup();
+            document.getElementById('processPopup').style.display = 'block';
+            const formData = new FormData(document.getElementById('linkForm'));
+            fetch("{% url 'process_link' %}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.text())
+            .then(data => {
+                updateProcessStatus("İşlem tamamlandı.");
+                showCompleteButton();
+            })
+            .catch(error => {
+                updateProcessStatus("Bir hata oluştu: " + error);
+                showCompleteButton();
+            });
+        }
+    </script>
+    
+</body>
+</html>

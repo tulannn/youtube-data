@@ -1,0 +1,8 @@
+django
+google-api-python-client
+gspread
+oauth2client
+beautifulsoup4
+selenium
+webdriver-manager
+gspread-formatting

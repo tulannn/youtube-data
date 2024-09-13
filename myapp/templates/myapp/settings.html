@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ayarlar</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Ayarlar</h1>
+        <form method="post" action="{% url 'settings' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="developer_key">YouTube API Key:</label>
+                <input type="text" id="developer_key" name="developer_key" value="{{ developer_key }}">
+            </div>
+            <div class="form-group">
+                <label for="spreadsheet_id">Google Sheets ID:</label>
+                <input type="text" id="spreadsheet_id" name="spreadsheet_id" value="{{ spreadsheet_id }}">
+            </div>
+            <button type="submit" class="submit-btn">Kaydet</button>
+        </form>
+    </div>
+</body>
+</html>
